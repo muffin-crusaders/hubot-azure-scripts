@@ -106,6 +106,7 @@ module.exports = (robot) ->
         robot.logger.debug "Brain loaded from blob storage"
         robot.brain.mergeData JSON.parse(text)
         loaded = true
+        robot.brain.emit 'init'
 
   init()
 
