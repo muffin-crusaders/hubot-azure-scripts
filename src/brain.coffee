@@ -102,6 +102,7 @@ module.exports = (robot) ->
           robot.logger.info "The blob doesn't exist yet. Initialiazing new brain data"
           robot.brain.mergeData {}
           loaded = true
+          robot.brain.emit 'init'
       else
         robot.logger.debug "Brain loaded from blob storage"
         robot.brain.mergeData JSON.parse(text)
