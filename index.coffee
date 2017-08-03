@@ -1,8 +1,5 @@
-'use strict'
+path = require('path')
 
-const path = require('path')
-
-module.exports = (robot) => {
-  const scriptsPath = path.resolve(__dirname, 'src')
-  robot.loadFile(scriptsPath, 'storage-blob-brain')
-}
+module.exports = (robot) ->
+  path = path.resolve __dirname, 'src'
+  robot.loadFile path, 'storage-blob-brain'
