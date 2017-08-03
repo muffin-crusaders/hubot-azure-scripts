@@ -45,7 +45,7 @@ module.exports = (robot) ->
     blobSvc = azure.createBlobService account, accessKey
 
   init = ()->
-    if !brainIsEnabled
+    if brainIsEnabled == 'false'
       robot.logger.debug "Hubot Azure Brain is disabled, initialization failed."
       return
     
@@ -67,7 +67,7 @@ module.exports = (robot) ->
         loadBrain()
 
   saveBrain = (data)->
-    if !brainIsEnabled
+    if brainIsEnabled == 'false'
       robot.logger.debug "Hubot Azure Brain is disabled, save failed."
       return
     
@@ -90,7 +90,7 @@ module.exports = (robot) ->
         robot.logger.debug "Saved brain with success to #{containerName}"
 
   loadBrain = ->
-    if !brainIsEnabled
+    if brainIsEnabled == 'false'
       robot.logger.debug "Hubot Azure Brain is explicitly disabled, load failed."
       return
     
