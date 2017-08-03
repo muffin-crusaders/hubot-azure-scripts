@@ -2,7 +2,7 @@
   "name": "hubot-azure-brain",
   "version": "0.2.1",
   "description": "A hubot script to persist hubot's brain using Azure storage",
-  "main": "src/scripts",  
+  "main": "index.coffee",  
   "dependencies": {
     "azure-storage": "~0.2.0"
   },
