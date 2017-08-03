@@ -1,6 +1,6 @@
 {
   "name": "hubot-azure-brain",
-  "version": "0.1.7",
+  "version": "0.2.0",
   "description": "A hubot script to persist hubot's brain using Azure storage",
   "main": "src/scripts",  
   "dependencies": {
