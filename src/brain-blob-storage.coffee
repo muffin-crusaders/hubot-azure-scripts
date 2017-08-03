@@ -5,11 +5,10 @@
 #   "azure-storage": "~0.2.0"
 #
 # Configuration:
-#   HUBOT_BRAIN_ENABLED                   - Whether or not to use the Azure Brain (defaults to 'true')
-#   HUBOT_BRAIN_USE_STORAGE_EMULATOR      - Whether or not to use the Azure Storage Emulator
-#   HUBOT_BRAIN_AZURE_STORAGE_ACCOUNT     - Azure Storage account name
-#   HUBOT_BRAIN_AZURE_STORAGE_ACCESS_KEY  - Azure Storage Access Key
+#   HUBOT_BRAIN_AZURE_CONNSTRING          - Connection string for the Azure blob storage instance
 #   HUBOT_BRAIN_AZURE_STORAGE_CONTAINER   - Azure Storage Blob container name (defaults to 'hubot')
+#   HUBOT_BRAIN_USE_STORAGE_EMULATOR      - Use the Azure Storage Emulator if defined
+#   HUBOT_BRAIN_DISABLED                  - Disable Azure Brain if defined
 #
 # Commands:
 #   None
@@ -23,15 +22,15 @@ module.exports = (robot) ->
   loaded            = false
   initializing      = false
   connectionString  = process.env.HUBOT_BRAIN_AZURE_CONNSTRING
-  containerName     = process.env.HUBOT_BRAIN_AZURE_STORAGE_CONTAINER  or "hubot"
+  containerName     = process.env.HUBOT_BRAIN_AZURE_STORAGE_CONTAINER or "hubot"
   useEmulator       = process.env.HUBOT_BRAIN_USE_STORAGE_EMULATOR
-  brainIsEnabled    = process.env.HUBOT_BRAIN_ENABLED == 'false' or true
+  brainIsDisabled    = process.env.HUBOT_BRAIN_DISABLED
   blobName          = "brain-dump.json"
   lastBrainData     = ""
 
-  if !brainIsEnabled
+  if brainIsDisabled
     robot.logger.debug "hubot-azure-brain has been explicitly disabled, HUBOT_BRAIN_ENABLED=false"
-  else if useEmulator == 'true'
+  else if useEmulator
     blobSvc = azure.createBlobService azure.generateDevelopmentStorageCredentials()
   else if !connectionString
     throw new Error "hubot-azure-brain requires HUBOT_BRAIN_AZURE_CONNSTRING"
@@ -39,7 +38,7 @@ module.exports = (robot) ->
     blobSvc = azure.createBlobService connectionString
 
   init = ()->
-    if !brainIsEnabled
+    if brainIsDisabled
       robot.logger.debug "hubot-azure-brain has been explicitly disabled, initialization failed."
       return
     
@@ -61,7 +60,7 @@ module.exports = (robot) ->
         loadBrain()
 
   saveBrain = (data)->
-    if !brainIsEnabled
+    if brainIsDisabled
       robot.logger.debug "hubot-azure-brain has been explicitly disabled, save failed."
       return
     
@@ -84,7 +83,7 @@ module.exports = (robot) ->
         robot.logger.debug "Saved brain with success to #{containerName}"
 
   loadBrain = ->
-    if !brainIsEnabled
+    if brainIsDisabled
       robot.logger.debug "hubot-azure-brain has been explicitly disabled, load failed."
       return
     
