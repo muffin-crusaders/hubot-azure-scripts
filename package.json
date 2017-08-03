@@ -1,23 +1,24 @@
 {
   "name": "hubot-azure-brain",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "A hubot script to persist hubot's brain using Azure storage",
-  "main": "index.coffee",  
-  "dependencies": {
-    "azure-storage": "~0.2.0"
-  },
-  "devDependencies": {},
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/coryallegory/hubot-azure-brain.git"
-  },
   "keywords": [
     "hubot",
     "azure"
   ],
-  "author": "coryallegory (corymetcalfe@gmail.com)",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/coryallegory/hubot-azure-brain/issues"
-  }
+  },
+  "license": "MIT",
+  "author": "coryallegory (corymetcalfe@gmail.com)",
+  "main": "index.coffee",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/coryallegory/hubot-azure-brain.git"
+  },
+  "scripts": {},
+  "dependencies": {
+    "azure-storage": "~0.2.1"
+  },
+  "devDependencies": {}
 }
