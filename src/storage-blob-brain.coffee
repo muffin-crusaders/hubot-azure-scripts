@@ -5,18 +5,17 @@
 #   "azure-storage": "*"
 #
 # Configuration:
-#   HUBOT_BRAIN_USE_STORAGE_EMULATOR              - Whether or not to use the Azure Storage Emulator
-#   HUBOT_BRAIN_AZURE_STORAGE_ACCOUNT             - Azure Storage account name
-#   HUBOT_BRAIN_AZURE_STORAGE_ACCESS_KEY          - Azure Storage Access Key
-#   HUBOT_BRAIN_AZURE_STORAGE_CONTAINER           - Azure Storage Blob container name (defaults to 'hubot')
+#   HUBOT_BRAIN_ENABLED                   - Whether or not to use the Azure Brain (defaults to 'true')
+#   HUBOT_BRAIN_USE_STORAGE_EMULATOR      - Whether or not to use the Azure Storage Emulator
+#   HUBOT_BRAIN_AZURE_STORAGE_ACCOUNT     - Azure Storage account name
+#   HUBOT_BRAIN_AZURE_STORAGE_ACCESS_KEY  - Azure Storage Access Key
+#   HUBOT_BRAIN_AZURE_STORAGE_CONTAINER   - Azure Storage Blob container name (defaults to 'hubot')
 #
 # Commands:
 #
 # Notes:
 #   None
 #
-# Author:
-#   bfcamara
 
 util    = require "util"
 azure   = require "azure-storage"
@@ -25,6 +24,7 @@ module.exports = (robot) ->
 
   loaded            = false
   initializing      = false
+  brainIsEnabled    = process.env.HUBOT_BRAIN_ENABLED or "true"
   useDevStore       = process.env.HUBOT_BRAIN_USE_STORAGE_EMULATOR
   account           = process.env.HUBOT_BRAIN_AZURE_STORAGE_ACCOUNT
   accessKey         = process.env.HUBOT_BRAIN_AZURE_STORAGE_ACCESS_KEY
@@ -33,7 +33,9 @@ module.exports = (robot) ->
   blobName          = "brain-dump.json"
   lastBrainData     = ""
 
-  if useDevStore == 'true'
+  if brainIsEnabled == 'false'
+    robot.logger.debug "Hubot Azure Brain has been explicitly disabled, HUBOT_BRAIN_ENABLED=false"
+  else if useDevStore == 'true'
     blobSvc = azure.createBlobService azure.generateDevelopmentStorageCredendentials()
   else
     unless account and accessKey
@@ -43,6 +45,10 @@ module.exports = (robot) ->
     blobSvc = azure.createBlobService account, accessKey
 
   init = ()->
+    if !brainIsEnabled
+      robot.logger.debug "Hubot Azure Brain is disabled, initialization failed."
+      return
+    
     initializing = true
     blobSvc.createContainerIfNotExists containerName, (err, justCreated, response) ->
       initializing = false
@@ -61,6 +67,10 @@ module.exports = (robot) ->
         loadBrain()
 
   saveBrain = (data)->
+    if !brainIsEnabled
+      robot.logger.debug "Hubot Azure Brain is disabled, save failed."
+      return
+    
     if !loaded
       robot.logger.debug "Not saving to Azure Storage Blob, because not loaded yet"
       init() if not initializing
@@ -80,6 +90,10 @@ module.exports = (robot) ->
         robot.logger.debug "Saved brain with success to #{containerName}"
 
   loadBrain = ->
+    if !brainIsEnabled
+      robot.logger.debug "Hubot Azure Brain is explicitly disabled, load failed."
+      return
+    
     blobSvc.getBlobToText containerName, blobName, (err, text)->
       if err  
         robot.logger.error "Error getting brain from Azure Storage Blob #{containerName}: #{util.inspect(err)}"

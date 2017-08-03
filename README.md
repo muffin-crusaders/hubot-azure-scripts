@@ -1,30 +1,31 @@
-hubot-azure-scripts
-===================
+# hubot-azure-scripts
 
-Hubot module to provide a bunch of Azure scripts and a brain implementation targeting 
-Azure Storage Account
+A hubot script to persist hubot's brain using Azure storage.
 
-Install it using `npm install hubot-azure-scripts`
+Install it using `npm install hubot-azure-brain`
 
-## Scripts
+## Installation
 
-There are no scripts yet. We'll include some in the future
+In hubot project repo, run:
 
+`npm install hubot-azure-brain --save`
+
+Then add **hubot-azure-brain** to your `external-scripts.json`:
+
+```json
+[
+  "hubot-azure-brain"
+]
+```
 
 ## Brain
 
 This module provides a brain implementation to store it in a Azure Storage Blob.
 
-You need to edit the `external-scrips.json` to include the file `hubot-azure-scripts/brain/storage-blob-brain`, 
-and remove the the `redis-brain` from the `hubot-scripts.json` file.
+You have to define the following environment variables:
 
-Then you have to define the following environment variables:
-
++  `HUBOT_BRAIN_ENABLED` - Whether or not to use the Azure Brain. If not defined defaults to `true`
 +  `HUBOT_BRAIN_USE_STORAGE_EMULATOR` - Whether or not to use the Azure Storage Emulator
 +  `HUBOT_BRAIN_AZURE_STORAGE_ACCOUNT` - The Azure storage account name
 +  `HUBOT_BRAIN_AZURE_STORAGE_ACCESS_KEY` - The Azure storage access key
 +  `HUBOT_BRAIN_AZURE_STORAGE_CONTAINER` - The Azure storage container. If not defined defaults to `hubot`
-
-
-
-

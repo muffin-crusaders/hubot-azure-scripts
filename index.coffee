@@ -1,11 +1,8 @@
-Fs   = require 'fs'
-Path = require 'path'
+'use strict'
 
-module.exports = (robot) ->
-  path = Path.resolve __dirname, 'scripts'
-  Fs.exists path, (exists) ->
-    if exists
-      for file in Fs.readdirSync(path)
-        robot.loadFile path, file
-        robot.parseHelp Path.join(path, file)
-        
+const path = require('path')
+
+module.exports = (robot) => {
+  const scriptsPath = path.resolve(__dirname, 'src')
+  robot.loadFile(scriptsPath, 'storage-blob-brain')
+}

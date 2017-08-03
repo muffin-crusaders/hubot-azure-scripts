@@ -1,7 +1,7 @@
 {
-  "name": "hubot-azure-scripts",
+  "name": "hubot-azure-brain",
   "version": "0.1.7",
-  "description": "Hubot scripts for Azure",
+  "description": "A hubot script to persist hubot's brain using Azure storage",
   "main": "src/scripts",  
   "dependencies": {
     "azure-storage": "~0.2.0"
@@ -9,15 +9,15 @@
   "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": "https://github.com/bfcamara/hubot-azure-scripts.git"
+    "url": "https://github.com/coryallegory/hubot-azure-brain.git"
   },
   "keywords": [
     "hubot",
     "azure"
   ],
-  "author": "bfcamara (http://www.bfcamara.com/)",
+  "author": "coryallegory (corymetcalfe@gmail.com)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/bfcamara/hubot-azure-scripts/issues"
+    "url": "https://github.com/coryallegory/hubot-azure-brain/issues"
   }
 }
