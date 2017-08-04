@@ -4,6 +4,8 @@ Hubot script to persist hubot's brain using Azure blob storage.
 
 ## Installation
 
+[The script can be installed via npm.](https://www.npmjs.com/package/hubot-azure-brain)
+
 In your hubot project repo, run:
 
 `npm install hubot-azure-brain --save`
