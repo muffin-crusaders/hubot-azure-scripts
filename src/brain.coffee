@@ -28,7 +28,15 @@ module.exports = (robot) ->
   blobName          = "brain-dump.json"
   lastBrainData     = ""
 
-  if brainIsDisabled
+  ## support deprecation of https://github.com/bfcamara/hubot-azure-scripts/
+  account = process.env.HUBOT_BRAIN_AZURE_STORAGE_ACCOUNT
+  accessKey = process.env.HUBOT_BRAIN_AZURE_STORAGE_ACCESS_KEY
+  if account or accessKey
+    robot.logger.warning("HUBOT_BRAIN_AZURE_STORAGE_ACCOUNT and HUBOT_BRAIN_AZURE_STORAGE_ACCESS_KEY are deprecated. You should be using HUBOT_BRAIN_AZURE_CONNSTRING instead.")
+  if account and accessKey
+    blobSvc = azure.createBlobService account, accessKey
+  ## end deprecation code
+  else if brainIsDisabled
     robot.logger.debug "hubot-azure-brain has been explicitly disabled, HUBOT_BRAIN_ENABLED=false"
   else if useEmulator
     blobSvc = azure.createBlobService azure.generateDevelopmentStorageCredentials()
@@ -41,11 +49,11 @@ module.exports = (robot) ->
     if brainIsDisabled
       robot.logger.debug "hubot-azure-brain has been explicitly disabled, initialization failed."
       return
-    
+
     initializing = true
     blobSvc.createContainerIfNotExists containerName, (err, justCreated, response) ->
       initializing = false
-      
+
       if err
         robot.logger.error "Error checking if container exists: #{util.inspect(err)}"
         return
@@ -63,7 +71,7 @@ module.exports = (robot) ->
     if brainIsDisabled
       robot.logger.debug "hubot-azure-brain has been explicitly disabled, save failed."
       return
-    
+
     if !loaded
       robot.logger.debug "Not saving to Azure Storage Blob, because not loaded yet"
       init() if not initializing
@@ -86,9 +94,9 @@ module.exports = (robot) ->
     if brainIsDisabled
       robot.logger.debug "hubot-azure-brain has been explicitly disabled, load failed."
       return
-    
+
     blobSvc.getBlobToText containerName, blobName, (err, text)->
-      if err  
+      if err
         robot.logger.error "Error getting brain from Azure Storage Blob #{containerName}: #{util.inspect(err)}"
         if err.statusCode is 404
           robot.logger.info "The blob doesn't exist yet. Initialiazing new brain data"
@@ -98,7 +106,7 @@ module.exports = (robot) ->
         robot.logger.debug "Brain loaded from blob storage"
         robot.brain.mergeData JSON.parse(text)
         loaded = true
-        
+
   init()
 
   robot.brain.on 'save', (data)->
